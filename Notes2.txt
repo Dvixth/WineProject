@@ -1,0 +1,600 @@
+//Programme principale main.cpp
+
+//Les includes
+#include <iostream>
+#include <vector>
+#include "Cave.hpp"
+#include "Vin.hpp"
+#include "Fournisseur.hpp"
+#include "Fournir.hpp"
+#include "Marge.hpp"
+#include <algorithm>
+
+
+using namespace std;
+
+// Global variables :
+// Les vecteurs qui contiennent des pointeurs vers les caves, les vins, les fournisseurs, les fournitures et les marges
+vector<Cave*> caves;
+vector<Vin*> vins;
+vector<Fournisseur*> fournisseurs;
+vector<Fournir*> fournitures;
+vector<Marge*> marges;
+vector<Fournir*> fournir;
+
+// Function prototypes
+void afficherMenu();
+void creerCave();
+void creerVin();
+void creerFournisseur();
+void creerFournir();
+void creerMarge();
+void afficherStock();
+void editCave();
+void ajouterVinaCave();
+void trouverCaveMeilleurPrix();
+void gererReduction();
+
+
+int main() {
+
+    int choix;
+    cout<<"Bienvenue dans notre logiciel de gestion de cave v 1.0.0"<<endl;
+    
+    do {
+
+        afficherMenu();
+        cout << "Entrez votre choix : ";
+        cin >> choix;
+
+        switch (choix) {
+            case 1://cree une cave
+                creerCave();
+                break;
+            case 2://cree un vin
+                creerVin();
+                break;
+            case 3://cree un fournisseur
+                creerFournisseur();
+                break;
+            case 4://cree une relation Fournir entre un Vin et un Fournisseur
+                creerFournir();
+                break;
+            case 5://cree une marge entre une Cave et et le prix d'un Vin
+                creerMarge();
+                break;
+            case 6://afficher le stock d'une cave
+                afficherStock();
+                break;
+            case  7://editer une cave
+                editCave();
+                break;
+            case 8://ajouter un vin a une cave
+                ajouterVinaCave();
+                break;
+            case 9:
+                trouverCaveMeilleurPrix();
+                break;
+            case 10:
+                gererReduction();
+                break;
+            case 11:
+                cout << "Au revoir !" << endl;
+                break;
+            default:
+                cout << "Choix invalide. Veuillez reessayer." << endl;
+        }
+    } while (choix != 11);
+
+    return 0;
+}
+
+void afficherMenu() {
+    cout << "===== Menu =====" << endl;
+    cout << "1. Creer une cave" << endl;
+    cout << "2. Creer un vin" << endl;
+    cout << "3. Creer un fournisseur" << endl;
+    cout << "4. Creer une Fournir" << endl;
+    cout << "5. Creer une marge" << endl;
+    cout << "6. Afficher le stock d'une cave" << endl;
+    cout << "7. Editer une cave "<<endl;
+    cout << "10. Editer les reductions d'un fournisseur" << endl;
+    cout << "X. L'edit des autres elements va venir lors d'une nouvelle mise a jour !! "<<endl;
+    cout << "8. Getion de stock (ajout de vins dans une cave) "<<endl;
+    cout << "9. Trouver la cave ou un vin est propose au meilleur prix" << endl;
+    cout << "11. Quitter" << endl;
+}
+
+//Fonction de creation d'une cave
+void creerCave() {
+    string id, nom, adresse;
+
+    cout << "Entrez l'ID de la cave : ";
+    cin >> id;
+
+    cout << "Entrez le nom de la cave : ";
+    cin >> nom;
+
+    cout << "Entrez l'adresse de la cave : ";
+    cin >> adresse;
+
+    Cave* nouvelleCave = new Cave(id, nom, adresse);
+    caves.push_back(nouvelleCave);
+
+    cout << "La cave a ete cree avec succes." << endl;
+}
+
+void creerVin() {
+
+    int choixTypeVin;
+    cout << "Choisissez le type de vin : " << endl;
+    cout << "1. Vin normal" << endl;
+    cout << "2. Vin de Garde" << endl;
+    cout << "3. Vin de Consommation" << endl;
+    cout << "Votre choix : ";
+    cin >> choixTypeVin;
+
+    string id, origine, producteur, nom;
+    int millesime, dureeDeConser;
+
+    switch (choixTypeVin) {
+        case 1: {
+            // Vin normal
+            cout << "Entrez l'ID du vin : ";
+            cin >> id;
+
+            cout << "Entrez l'origine du vin : ";
+            cin >> origine;
+
+            cout << "Entrez le producteur du vin : ";
+            cin >> producteur;
+
+            cout << "Entrez le nom du vin : ";
+            cin >> nom;
+
+            cout << "Entrez le millesime du vin : ";
+            cin >> millesime;
+
+            Vin* nouveauVin = new Vin(id, origine, producteur, nom, millesime);
+            vins.push_back(nouveauVin);
+
+            cout << "Le vin normal a ete cree avec succes." << endl;
+            break;
+        }
+        case 2: {
+            // Vin de Garde
+            cout << "Entrez l'ID du vin : ";
+            cin >> id;
+
+            cout << "Entrez l'origine du vin : ";
+            cin >> origine;
+
+            cout << "Entrez le producteur du vin : ";
+            cin >> producteur;
+
+            cout << "Entrez le nom du vin : ";
+            cin >> nom;
+
+            cout << "Entrez le millesime du vin : ";
+            cin >> millesime;
+
+            cout << "Entrez la duree de conservation du vin de garde : ";
+            cin >> dureeDeConser;
+
+            auto* nouveauVinGarde= new VinDeGarde(id, origine, producteur, nom, millesime, dureeDeConser);
+            vins.push_back(nouveauVinGarde);
+
+            cout << "Le vin de garde a ete cree avec succes." << endl;
+            break;
+        }
+        case 3: {
+            // Vin de Consommation
+            cout << "Entrez l'ID du vin : ";
+            cin >> id;
+
+            cout << "Entrez l'origine du vin : ";
+            cin >> origine;
+
+            cout << "Entrez le producteur du vin : ";
+            cin >> producteur;
+
+            cout << "Entrez le nom du vin : ";
+            cin >> nom;
+
+            cout << "Entrez le millesime du vin : ";
+            cin >> millesime;
+
+            cout << "Entrez la date d'expiration du vin de consommation : ";
+            cin >> dureeDeConser;
+
+            auto* nouveauVinConso=new VinDeConsomation(id, origine, producteur, nom, millesime, dureeDeConser);
+            vins.push_back(nouveauVinConso);
+
+            cout << "Le vin de consommation a ete cree avec succes." << endl;
+            break;
+        }
+        default:
+            cout << "Choix de type de vin invalide." << endl;
+    }
+}
+
+//Fonction pour cree un fournisseur
+void creerFournisseur() {
+    string id, nom, adresse;
+
+    cout << "Entrez l'ID du fournisseur : ";
+    cin >> id;
+
+    cout << "Entrez le nom du fournisseur : ";
+    cin >> nom;
+
+    cout << "Entrez l'adresse du fournisseur : ";
+    cin >> adresse;
+
+
+    // Add logic to handle duplicate IDs if needed
+    // For example: Check if the ID already exists in the vector before adding
+    Fournisseur* nouveauFournisseur = new Fournisseur(id, nom, adresse);
+    fournisseurs.push_back(nouveauFournisseur);
+
+    cout << "Le fournisseur a ete cree avec succes." << endl;
+}
+
+//Fonction pour cree une relation Fournir entre un Vin et un Fournisseur
+void creerFournir() {
+    // Assume the user selects a Vin and a Fournisseur from existing vectors
+    if (vins.empty() || fournisseurs.empty()) {
+        cout << "Veuillez creer au moins un vin et un fournisseur avant de creer une fourniture." << endl;
+        return;
+    }
+
+    int choixVin, choixFournisseur;
+    double prix;
+
+    cout << "Choisissez un vin : " << endl;
+    for (size_t i = 0; i < vins.size(); ++i) {
+        cout << i + 1 << ". " << vins[i]->getNomVin() << endl;
+    }
+
+    cout << "Votre choix : ";
+    cin >> choixVin;
+
+    if (choixVin > 0 && choixVin <= static_cast<int>(vins.size())) {
+        cout << "Choisissez un fournisseur : " << endl;
+        for (size_t i = 0; i < fournisseurs.size(); ++i) {
+            cout << i + 1 << ". " << fournisseurs[i]->getNomFournisseur() << endl;
+        }
+
+        cout << "Votre choix : ";
+        cin >> choixFournisseur;
+
+        if (choixFournisseur > 0 && choixFournisseur <= static_cast<int>(fournisseurs.size())) {
+            cout << "Entrez le prix : ";
+            cin >> prix;
+
+            Fournir* nouvelleFourniture = new Fournir(vins[choixVin - 1], fournisseurs[choixFournisseur - 1], prix);
+            fournitures.push_back(nouvelleFourniture);
+
+            cout << "La fourniture a ete creee avec succes." << endl;
+        } else {
+            cout << "Choix de fournisseur invalide." << endl;
+        }
+    } else {
+        cout << "Choix de vin invalide." << endl;
+    }
+}
+
+//Fonction pour cree une marge entre une Cave et et le prix d'un Vin
+void creerMarge() {
+    // Assume the user selects a Vin and a Cave from existing vectors
+    if (vins.empty() || caves.empty()) {
+        cout << "Veuillez creer au moins un vin et une cave avant de creer une marge." << endl;
+        return;
+    }
+
+    int choixVin, choixCave;
+    double taux;
+
+    cout << "Choisissez un vin : " << endl;
+    for (size_t i = 0; i < vins.size(); ++i) {
+        cout << i + 1 << ". " << vins[i]->getNomVin() << endl;
+    }
+
+    cout << "Votre choix : ";
+    cin >> choixVin;
+
+    if (choixVin > 0 && choixVin <= static_cast<int>(vins.size())) {
+        cout << "Choisissez une option : " << endl;
+        cout << "1. Choisir une cave existante" << endl;
+        cout << "2. Creer une nouvelle cave" << endl;
+
+        int choixOption;
+        cout << "Votre choix : ";
+        cin >> choixOption;
+
+        if (choixOption == 1) {
+            // Afficher la liste des caves existantes
+            cout << "Choisissez une cave existante : " << endl;
+            for (size_t i = 0; i < caves.size(); ++i) {
+                cout << i + 1 << ". " << caves[i]->getNomCave() << endl;
+            }
+
+            cout << "Votre choix : ";
+            cin >> choixCave;
+
+            if (choixCave > 0 && choixCave <= static_cast<int>(caves.size())) {
+                cout << "Entrez le taux : ";
+                cin >> taux;
+
+                Marge* nouvelleMarge = new Marge(vins[choixVin - 1], caves[choixCave - 1], taux);
+                marges.push_back(nouvelleMarge);
+
+                cout << "La marge a ete creee avec succes." << endl;
+            } else {
+                cout << "Choix de cave invalide." << endl;
+            }
+        } else if (choixOption == 2) {
+            // Logique pour creer une nouvelle cave si necessaire
+            cout << "Fonctionnalite non implementee pour creer une nouvelle cave." << endl;
+        } else {
+            cout << "Option invalide." << endl;
+        }
+    } else {
+        cout << "Choix de vin invalide." << endl;
+    }
+}
+
+//Fonction pour afficher le stocke d'une cave
+// Fonction pour afficher le stock d'une cave
+void afficherStock() {
+    if (!caves.empty()) {
+        cout << "Choisissez une cave : " << endl;
+        for (size_t i = 0; i < caves.size(); ++i) {
+            cout << i + 1 << ". " << caves[i]->getNomCave() << endl;
+        }
+
+        int choixCave;
+        cout << "Votre choix : ";
+        cin >> choixCave;
+
+        if (choixCave > 0 && choixCave <= static_cast<int>(caves.size())) {
+            if (caves[choixCave - 1]->stockVide()) {
+                cout << "Le stock de la cave est vide." << endl;
+            } else {
+                caves[choixCave - 1]->afficherStock();
+            }
+        } else {
+            cout << "Choix de cave invalide." << endl;
+        }
+    } else {
+        cout << "Aucune cave n'a ete creee." << endl;
+    }
+}
+
+void gererReduction() {
+    int choix;
+
+    if (!fournisseurs.empty()) {
+        cout << "1. Afficher les reductions existantes" << endl;
+        cout << "2. Ajouter des reductions" << endl;
+        cout << "Votre choix : ";
+        cin >> choix;
+
+        if (choix == 1) {
+            // Afficher les reductions existantes
+            cout << "Choisissez un fournisseur : " << endl;
+            for (size_t i = 0; i < fournisseurs.size(); ++i) {
+                cout << i + 1 << ". " << fournisseurs[i]->getNomFournisseur() << endl;
+            }
+
+            int choixFournisseur;
+            cout << "Votre choix : ";
+            cin >> choixFournisseur;
+
+            if (choixFournisseur > 0 && choixFournisseur <= static_cast<int>(fournisseurs.size())) {
+                fournisseurs[choixFournisseur - 1]->afficheReductionsFournisseur();
+            } else {
+                cout << "Choix de fournisseur invalide." << endl;
+            }
+        } else if (choix == 2) {
+            // Ajouter des reductions
+            cout << "Choisissez un fournisseur : " << endl;
+            for (size_t i = 0; i < fournisseurs.size(); ++i) {
+                cout << i + 1 << ". " << fournisseurs[i]->getNomFournisseur() << endl;
+            }
+
+            int choixFournisseur;
+            cout << "Votre choix : ";
+            cin >> choixFournisseur;
+
+            if (choixFournisseur > 0 && choixFournisseur <= static_cast<int>(fournisseurs.size())) {
+                // Saisir les reductions à ajouter
+                map<int, double> reductionsToAdd;
+                int nbBouteilles;
+                double reduction;
+
+                cout << "Saisissez les reductions (nombre de bouteilles -> reduction en %, 0 pour terminer) :" << endl;
+                while (true) {
+                    cout << "Nombre de bouteilles : ";
+                    cin >> nbBouteilles;
+                    if (nbBouteilles == 0) {
+                        break;
+                    }
+                    cout << "Reduction en % : ";
+                    cin >> reduction;
+                    reductionsToAdd[nbBouteilles] = reduction;
+                }
+
+                fournisseurs[choixFournisseur - 1]->ajouterReduction(reductionsToAdd);
+                cout << "Reductions ajoutees avec succes." << endl;
+            } else {
+                cout << "Choix de fournisseur invalide." << endl;
+            }
+        } else {
+            cout << "Choix invalide." << endl;
+        }
+    } else {
+        cout << "Veuillez creer au moins un fournisseur avant de creer une reduction." << endl;
+    }
+}
+
+
+//Fonction pour editer une cave
+void editCave() {
+
+    if (caves.empty()) {
+        cout << "Aucune cave n'a ete creee." << endl;
+        return;
+    }
+
+    cout << "Liste des caves disponibles :" << endl;
+    for (Cave* cave : caves) {
+        cout << "ID: " << cave->getIdCave() << ", Nom: " << cave->getNomCave()<<", Adresse: "<<cave->getAdresseCave()<< endl;
+    }
+
+    string IdCave;
+    cout << "Entrez l'ID de la cave que vous souhaitez modifier : ";
+    cin >> IdCave;
+
+    // Recherche de la cave avec l'ID donne
+    auto it = find_if(caves.begin(), caves.end(), [IdCave](Cave *cave) {
+        return cave->getIdCave() == IdCave;
+    });
+
+    if (it != caves.end()) {
+        // La cave a ete trouvee
+        cout << "Cave trouvee. Entrez les nouvelles informations :" << endl;
+        string nouveauNom, nouvelleAdresse;
+
+        cout << "Nouveau nom de la cave : ";
+        cin >> nouveauNom;
+
+        cout << "Nouvelle adresse de la cave : ";
+        cin >> nouvelleAdresse;
+
+        // Mettez à jour les informations de la cave
+        (*it)->setNomCave(nouveauNom);
+        (*it)->setAdresseCave(nouvelleAdresse);
+
+        cout << "La cave a ete modifiee avec succes." << endl;
+    } else {
+        cout << "Aucune cave trouvee avec l'ID fourni." << endl;
+    }
+}
+//Fonction qui ajoute un vin dans une cave
+void ajouterVinaCave() {
+    // Verifier si des caves et des vins existent
+    if (caves.empty() || vins.empty()) {
+        cout << "Veuillez creer au moins une cave et un vin avant d'ajouter un vin a une cave." << endl;
+        return;
+    }
+
+    // Afficher la liste des caves
+    cout << "Choisissez une cave : " << endl;
+    for (size_t i = 0; i < caves.size(); ++i) {
+        cout << i + 1 << ". " << caves[i]->getNomCave() << endl;
+    }
+
+    int choixCave;
+    cout << "Votre choix : ";
+    cin >> choixCave;
+
+    // Verifier la validite du choix de la cave
+    if (choixCave > 0 && choixCave <= static_cast<int>(caves.size())) {
+        // Afficher la liste des vins
+        cout << "Choisissez un vin : " << endl;
+        for (size_t i = 0; i < vins.size(); ++i) {
+            cout << i + 1 << ". " << vins[i]->getNomVin() << endl;
+        }
+
+        int choixVin;
+        cout << "Votre choix : ";
+        cin >> choixVin;
+
+        // Verifier la validite du choix du vin
+        if (choixVin > 0 && choixVin <= static_cast<int>(vins.size())) {
+            // Entrer la quantite
+            int quantite;
+            cout << "Entrez la quantite : ";
+            cin >> quantite;
+
+            // Ajouter le vin à la cave avec la quantite
+            caves[choixCave - 1]->ajouterVinAvecQuantite(vins[choixVin - 1], quantite);
+        } else {
+            cout << "Choix de vin invalide." << endl;
+        }
+    } else {
+        cout << "Choix de cave invalide." << endl;
+    }
+};
+
+//Fonction qui trouve la cave ou un vin est propose au meilleur prix en dependent d'un vin et de son mellinisme
+//Celle-ci cherche la marge la plus petit entre une cave et un vin et c'est surement cette cave qui le propose au meilleur prix
+void trouverCaveMeilleurPrix() {
+    if (vins.empty() || marges.empty()) {
+        cout << "Veuillez creer au moins un vin et une marge avant de trouver la cave au meilleur prix." << endl;
+        return;
+    }
+
+    int choixVin;
+    cout << "Choisissez un vin : " << endl;
+    for (size_t i = 0; i < vins.size(); ++i) {
+        cout << i + 1 << ". " << vins[i]->getNomVin() << " (" << vins[i]->getMillesime() << ")" << endl;
+    }
+
+    cout << "Votre choix : ";
+    cin >> choixVin;
+
+    if (choixVin > 0 && choixVin <= static_cast<int>(vins.size())) {
+        int millerimeRecherche;
+        cout << "Entrez le millesime recherche : ";
+        cin >> millerimeRecherche;
+
+        Vin* vinChoisi = vins[choixVin - 1];
+        Marge* margeChoisie = nullptr;
+
+        // Trouver la marge associee au vin et au millesime recherche avec le taux le plus bas
+        for (Marge* autreMarge : marges) {
+            if (autreMarge->getVin() == vinChoisi &&
+                autreMarge->getVin()->getMillesime() == millerimeRecherche) {
+                if (margeChoisie == nullptr || autreMarge->getTaux() < margeChoisie->getTaux()) {
+                    margeChoisie = autreMarge;
+                }
+            }
+        }
+
+        if (margeChoisie != nullptr) {
+            double prix = vinChoisi->getFournir()->getPrix() * (1 + margeChoisie->getTaux());
+            cout << "Le vin " << vinChoisi->getNomVin() << " (" << vinChoisi->getMillesime() << ") est propose au meilleur prix par la cave : "
+                 << margeChoisie->getCave() ->getNomCave() << " au prix de " << prix << "$." << endl;
+        } else {
+            cout << "Pas de marge trouvee avec ce vin et ce millesime." << endl;
+        }
+    } else {
+        cout << "Choix de vin invalide." << endl;
+    }
+}
+
+
+
+Backup fonciton d'affichage du stock :
+
+void Cave::afficherStock() {
+
+    cout << "Stock dans la cave " << NomCave << ":" << endl;
+    for (const auto& pair : vinsStock) {
+        Vin* vin = pair.first;
+        int quantite = pair.second;
+        cout << "Vin: " << vin->getNomVin() << " | Quantite en stock: " << quantite;
+
+        // Vérifiez si le vin a un fournisseur associé
+        Fournir* fournir = vin->getFournir();
+        Marge* pMarge = vin->getMarge();
+
+        if (fournir != nullptr && pMarge != nullptr) {
+            cout << " | Fournisseur: " << fournir->getFournisseur()->getNomFournisseur();
+            double prix= fournir->getPrix() + pMarge->getTaux() * fournir->getPrix();
+            cout << " au Prix de : "<< prix <<"$"<< endl;
+        }
+    }
+};

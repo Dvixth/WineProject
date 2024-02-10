@@ -1,0 +1,11 @@
+# ninja log v5
+2497	2727	7261858907189721	WineProject.exe	71cfc4f5e2e4946
+18	523	1707590112238672149	build.ninja	c5bf6385e6e3d2b5
+1	1379	1707590175755040136	CMakeFiles/WineProject.dir/Fournisseur.cpp.o	bbc3ddb0ae0933ee
+2	1907	1707590176283043086	CMakeFiles/WineProject.dir/Fournir.cpp.o	5e1a32e93b44598e
+1	1969	1707590176347043444	CMakeFiles/WineProject.dir/Marge.cpp.o	4ce901ec58a8e5f3
+1	2306	1707590176683045320	CMakeFiles/WineProject.dir/Vin.cpp.o	1311814f9968a1fd
+1	2574	1707590176951046816	CMakeFiles/WineProject.dir/Cave.cpp.o	6d9e223e9fd88c8b
+1381	2660	1707590177039047308	CMakeFiles/WineProject.dir/Reduction.cpp.o	77f89f066d43f28a
+0	3017	1707590177395049294	CMakeFiles/WineProject.dir/main.cpp.o	a52e5c4d248ab9ef
+3018	3237	1707590177611050499	WineProject	36f2408f930069d9
